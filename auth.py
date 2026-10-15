@@ -1,6 +1,7 @@
 """Authentication and session handling."""
 import hashlib
-import random
+import secrets
+
 
 import database
 
@@ -13,7 +14,7 @@ def hash_password(password):
 
 
 def register(username, password, role="customer"):
-    if username == "" or password == "":
+    if username == "" or password == "":    
         print("Username and password are required")
         return False
     database.add_user(username, hash_password(password), role)
@@ -26,7 +27,7 @@ def login(username, password):
         print("User not found")
         return None
     if user[1] == hash_password(password):
-        token = str(random.randint(100000, 999999))
+        token = str(100000 + secrets.randbelow(999999))
         sessions[token] = username
         return token
     else:
